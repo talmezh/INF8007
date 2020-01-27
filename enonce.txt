@@ -1,0 +1,67 @@
+# INF8007 Travail Pratique 
+
+## Présentation 
+
+Les séances de travaux pratiques seront consacrées à la création d’un unique projet pendant toute la session.
+Le but du projet est de faire un script qui vérifie la présence de lien mort dans un site web.
+Pour se faire, après avoir installé un environnement de travail adéquat (séance 1), 
+il faudra aller chercher tous les liens disponibles dans une page par “web scrapping” (séance 2). 
+Avec cela, il sera possible de parcourir l’ensemble du site web (séance 3). 
+
+La seconde moitié du projet permettra d’augmenter l’usabilité du projet. 
+Il faudra rendre possible le passage d’argument (séance 4). 
+Nous pourrons ensuite créer un script bash qui utilise notre premier script et qui permet de vérifier un site web aillant un serveur en Node et installer sur github (séance 5). 
+Le dernier point sera de revisité notre code pour le transformé dans un style plus fonctionnel (séance 6) et finalement de lui ajouter une meilleure gestion des erreurs (séance 7). 
+
+## Spécification technique 
+
+Le script principal peut être écris en javascript ou en python.
+Noter que je connais mieux le javascript que le python, et il me sera plus facile de supporter le premier que le second.
+J’encourage à utiliser le langage avec lequel vous êtes le plus à l’aise pour perdre moins de temps avec les détails de syntaxe et se concentré sur la matière du cours. 
+Le second script, à partir de la séance 5, doit être fait en bash. 
+
+Vous devez utiliser git au cours de la session avec des commits fréquent et des messages pertinents. La bonne utilisation de git sera vérifier et évaluer. 
+
+Le travail doit être fait en équipe de 2. En cas d’un nombre impaire, une équipe de 3 sera permise. 
+
+La révision de code se fera individuellement.
+
+## Évaluation 
+
+La première remise portera sur la partie prévue pour les séances 1 à 3. La remise finale évaluera l’ensemble du projet. 
+
+### Première remise (15 points) 
+
+ - Web scrapping (5 points)
+	- résout les liens relatifs dans les href.
+	- résout les liens absolus dans les href.
+	- résout les liens absolus dans le textes. 
+	- pas de Faux negatif
+	- pas de Faux positif 
+ - Web cralling (5 points)
+	- Parcours les pages du site web
+	- Vérifie les liens externes sans les parcourir
+	- Évite de parcourir en double les pages
+ - qualité du projet (5 points)
+	- git
+		- constance dans la taille des commits
+		- message de commits pertinents
+	- README
+		- explique comment utilisé le code
+	- linter
+	- typage du code.
+	- commentaire
+
+### Seconde remise (30 points)
+
+ - Web scrapping & web cralling (5 points)
+ - qualité du projet (5 points)
+ - gestion des arguments (5 points)
+ - script bash (5 points)
+ - concept du fonctionnel (5 points)
+ - gestion d'erreur (5 points)
+ 
+### Révision de code (10 points)
+
+- Démonstration de la compréhension du code écris.
+- Démonstration de la compréhension de la matière vu en classe.
