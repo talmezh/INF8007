@@ -49,13 +49,18 @@ while to_visit:
 
 # check the status of external links
 print("Checking status of links")
+deadLinks = []
 while outlinks:
     l = outlinks.pop()
+    print(l)
 
     try:
-        r = requests.get(l)
+        print("trying")
+        r = requests.get(l, timeout=1)
         external_visited[l] = r.status_code
     except:
+        print("except")
+        deadLinks.append(l)
         external_visited[l] = None
 
 # Create a DataFrame
