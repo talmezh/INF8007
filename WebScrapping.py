@@ -1,7 +1,18 @@
 import requests
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
 import pandas as pd
+from html.parser import HTMLParser
+import urllib.request
+import re
+
+
+class MyHTMLParser(HTMLParser):
+    def handle_starttag(self, tag, attrs):
+        if tag == "a":
+            for name, value in attrs:
+                if name == "href":
+                    links.append(value)
 
 # Get base links
 site = 'https://lesvolsdalexi.com/'
@@ -11,6 +22,7 @@ to_visit = [site]
 outlinks = []
 visited = {}
 external_visited = {}
+links = []
 
 
 print("Extracting URLs")
@@ -27,8 +39,12 @@ while to_visit:
         visited[l] = None
 
     if r.status_code == 200:
-        soup = BeautifulSoup(r.content, 'html.parser')
-        links = [l['href'] for l in soup.find_all('a', href=True)]
+        parser = MyHTMLParser()
+        f = urllib.request.urlopen(l)
+        html = f.read()
+        f.close()
+        links = []
+        parser.feed(str(html))
         for link in links:
             parsed_link = urlparse(link)
             loc = parsed_link.netloc
@@ -76,3 +92,6 @@ df2['Type'] = 'External'
 
 results = pd.concat([df1, df2])
 results.to_csv('link_report.csv')
+
+if __name__ == '__main__':
+    print(1)
