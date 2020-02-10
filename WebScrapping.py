@@ -41,10 +41,11 @@ while to_visit:
     if r.status_code == 200:
         parser = MyHTMLParser()
         f = urllib.request.urlopen(l)
-        html = f.read()
+        html = str(f.read())
         f.close()
+        text_links = re.findall("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]| [! * \(\),] | (?: %[0-9a-fA-F][0-9a-fA-F]))+", html)
         links = []
-        parser.feed(str(html))
+        parser.feed(html)
         for link in links:
             parsed_link = urlparse(link)
             loc = parsed_link.netloc
