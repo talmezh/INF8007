@@ -1,5 +1,4 @@
 import requests
-#from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
 import pandas as pd
 from html.parser import HTMLParser
@@ -12,10 +11,16 @@ class MyHTMLParser(HTMLParser):
         if tag == "a":
             for name, value in attrs:
                 if name == "href":
-                    links.append(value)
+                    if value.find(';'):
+                        continue
+                    else:
+                        value = value.replace("\\", '')
+                        value = value.replace("\"", '')
+                        value = value.replace("'", '')
+                        links.append(value)
 
 # Get base links
-site = 'https://lesvolsdalexi.com/'
+site = 'https://deniscorbin1.wordpress.com/'
 base = urlparse(site).netloc
 
 to_visit = [site]
@@ -43,15 +48,18 @@ while to_visit:
         f = urllib.request.urlopen(l)
         html = str(f.read())
         f.close()
-        text_links = re.findall("http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]| [! * \(\),] | (?: %[0-9a-fA-F][0-9a-fA-F]))+", html)
         links = []
+        import time
+        #t = time.time()
+        links = re.findall("https?://?(?:(?:\w+\.)+[\w:]+\@)?(?:(?:\w+\.)+\w+)(?::\w+)?(?:/[\w\.\-]+)*/?(?:\?[\w=&]+)?(?:#\w+)?", html)
+        #print(time.time()-t)
         parser.feed(html)
+
         for link in links:
             parsed_link = urlparse(link)
             loc = parsed_link.netloc
             path = parsed_link.path
             joined_url = urljoin(site, link)
-
             if loc == '':
                 if joined_url not in to_visit and joined_url not in visited.keys():
                     to_visit.append(joined_url)
