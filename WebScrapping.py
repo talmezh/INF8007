@@ -113,6 +113,6 @@ def webScrapping(site):# Get base links
     results.to_csv('link_report.csv')
 
 if __name__ == '__main__':
-    # site = 'https://deniscorbin1.wordpress.com/'
+    # site = 'https://lesvolsdalexi.com/'
     # Donner le liens comme argument en input
     webScrapping(sys.argv[1])
