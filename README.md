@@ -26,9 +26,3 @@ python WebScrapping.py 'https://www.nom-du-site.com'
 
 * **Denis Corbin** - *Initial work* - [cacoool](https://github.com/cacoool)
 * **Tal Mezheritsky** - *Initial work* - [talmezh](https://github.com/talmezh)
-
-## Remerciements
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
