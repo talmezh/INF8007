@@ -13,7 +13,7 @@ conda activate INF8007
 ```
 Puis lancer le script en donnant le site web à analyser comme argument:
 ```
-python WebScrapping.py 'https://www.nom-du-site.com'
+python WebScrapping.py https://www.nom-du-site.com
 ```
 À la sortie, le fichier `link_repost.csv` contient les résultats de l'analyse avec tous les sites vérifiés ainsi que leur code de status
 
