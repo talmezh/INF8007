@@ -3,11 +3,14 @@ from urllib.parse import urlparse, urljoin
 import pandas as pd
 from html.parser import HTMLParser
 import urllib.request
+import urllib
 import re
+import codecs
+import argparse
 import sys
 
 
-def webScrapping(site):# Get base links
+def webScrapping(URL, HTML, CRAWL):# Get base links
     # Classe parser qui trouver les a href dans le html
     class MyHTMLParser(HTMLParser):
         def handle_starttag(self, tag, attrs):
@@ -23,9 +26,9 @@ def webScrapping(site):# Get base links
                             value = value.replace("'", '')
                             links.append(value)
     # Trouver le lien de base
-    base = urlparse(site).netloc
+    base = urlparse(URL).netloc
 
-    to_visit = [site]
+    to_visit = [URL]
     outlinks = []
     visited = {}
     external_visited = {}
@@ -38,7 +41,7 @@ def webScrapping(site):# Get base links
         # On extrait un lien à la fois
         l = to_visit.pop()
         print(l)
-        url = urljoin(site, l)
+        url = urljoin(URL, l)
 
         # On regarde si ce lien existe et on ajoute son status code à la struct des liens visités
         try:
@@ -60,7 +63,7 @@ def webScrapping(site):# Get base links
             for link in links:
                 parsed_link = urlparse(link)
                 loc = parsed_link.netloc
-                joined_url = urljoin(site, link)
+                joined_url = urljoin(URL, link)
                 # Si la loc est vide:
                 if loc == '':
                     # Vérifier les doublons
@@ -113,6 +116,21 @@ def webScrapping(site):# Get base links
     results.to_csv('link_report.csv')
 
 if __name__ == '__main__':
-    # site = 'https://lesvolsdalexi.com/'
+    parser = argparse.ArgumentParser(description='WebCrawler')
+
+    parser.add_argument('--URL', action="store", help="Specifiy the base link (required)")
+    parser.add_argument('--HTML', action="store", default=False, dest="HTML", help="Specify the HTML file, defaults to false")
+    parser.add_argument('--CRAWL', action="store_true", default=False, dest="CRAWL", help="Specify if the program should Crawl(True) or not")
+    parser.add_argument('--InputType', action="store", default="u", dest="InputType", help="Select input type (false: default to u: URL, h: html, l: liste url, f: liste fichiers)")
+    opt = parser.parse_args(['--URL', 'https://deniscorbin1.wordpress.com/', '--HTML', 'test.html', '--CRAWL', '--InputType', 'h'])
+    if opt.InputType =='u' or  opt.InputType =='h':
+        webScrapping(opt.URL, opt.HTML, opt.CRAWL)
+    else:
+        for stuff in opt.IRL:
+            webScrapping(opt.URL, opt.HTML, opt.CRAWL)
+    #print(parser.parse_args("URL"))
+    #site = codecs.open("/home/decora/Downloads/Denis Corbin _ Je suis étudiant en sciences de la nature au Cégep de Terrebonne.html", 'r')
+    #site = 'https://lesvolsdalexi.com/'
+    #webScrapping(site)
     # Donner le liens comme argument en input
-    webScrapping(sys.argv[1])
+    #webScrapping(sys.argv[1])
