@@ -1,0 +1,15 @@
+#Prends le premier argument comme l'adresse du git a cloner
+repo=$1
+#Extraire le nom du dossier du repertoire local
+basename=$(basename $repo)
+filename=${basename%.*}
+#Prends le deuxieme argument et cree la variable d'environnement PORT
+export PORT=$2
+#Clone le repertoire
+git clone $repo
+#Changement de dossier
+cd $filename
+#Installation des dependances
+npm install
+#Depart du serveur local
+npm start
