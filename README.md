@@ -17,6 +17,20 @@ python WebScrapping.py https://www.nom-du-site.com
 ```
 À la sortie, le fichier `link_repost.csv` contient les résultats de l'analyse avec tous les sites vérifiés ainsi que leur code de status
 
+## Utilisation et vérification du typage
+Afin de vérifier que le typage ne comporte pas d'erreur dans le code, nous avons utilisé MyPy qui détecte les erreurs de typage. Si l'utilisateur souhaite vérifier que le typage est adéquat, il peut le faire comme suit en activant d'abord l'environnement Conda:
+```
+conda activate INF8007
+```
+Puis appeler le module sur le script python devant être analysé:
+```
+python -m mypy web_scrapping.py
+```
+Les erreurs qui apparaissaient ici on été corrigé au cours du projet.
+
+## Linter
+Un Linter (PyLint) est appelé au début du script lors de son exécution et les outputs sont loggés dans StdOut et StdErr.
+
 ## Outils
 
 * [Python](https://www.python.org/) - Langage de script
