@@ -18,7 +18,7 @@ def webScrapping(IN, TYPE, CRAWL, z):# Get base links
                 for name, value in attrs:
                     if name == "href":
                         # Une fois trouvé, le lien est nettoyé afin d'éliminer les faux positifs
-                        if value.find(';'):
+                        if value.find(';') != -1:
                             continue
                         else:
                             value = value.replace("\\", '')
@@ -41,8 +41,8 @@ def webScrapping(IN, TYPE, CRAWL, z):# Get base links
         f.close()
         links = []
         links = re.findall(
-            "https?://?(?:(?:\w+\.)+[\w:]+\@)?(?:(?:\w+\.)+\w+)(?::\w+)?(?:/[\w\.\-]+)*/?(?:\?[\w=&]+)?(?:#\w+)?", html)
-        parser.feed(html)
+            "https?://?(?:(?:\w+\.)+[\w:]+\@)?(?:(?:[\w\-]+\.*)+\w+)(?::\w+)?(?:/[\w\.\-]+)*/?(?:\?[\w=&]+)?(?:#\w+)?", html)
+        #parser.feed(html)
 
         for link in links:
             if link not in outlinks and link not in visited.keys():
@@ -71,7 +71,7 @@ def webScrapping(IN, TYPE, CRAWL, z):# Get base links
                 html = str(f.read())
                 f.close()
                 links = []
-                links = re.findall("https?://?(?:(?:\w+\.)+[\w:]+\@)?(?:(?:\w+\.)+\w+)(?::\w+)?(?:/[\w\.\-]+)*/?(?:\?[\w=&]+)?(?:#\w+)?", html)
+                links = re.findall("https?://?(?:(?:\w+\.)+[\w:]+\@)?(?:(?:[\w\-]+\.*)+\w+)(?::\w+)?(?:/[\w\.\-]+)*/?(?:\?[\w=&]+)?(?:#\w+)?", html)
                 parser.feed(html)
 
                 for link in links:
@@ -148,9 +148,9 @@ def webScrapping(IN, TYPE, CRAWL, z):# Get base links
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='WebCrawler')
 
-    parser.add_argument('--IN', action="store", help="Specifiy the url(s) or the path to the HTML file(s) given in a list [link1, link2, ...]")
-    parser.add_argument('--TYPE', action="store", help="Select input type (false: default to u: URL, h: html. Specify in a list")
-    parser.add_argument('--CRAWL', action="store", dest="CRAWL", help="Specify if the program should Crawl(True) or not. Crawling will be disabled for local HTML files. Specify in a list")
+    parser.add_argument('--IN', action="store", nargs='+', help="Specifiy the url(s) or the path to the HTML file(s) given in a list [link1, link2, ...]")
+    parser.add_argument('--TYPE', action="store", nargs='+', help="Select input type (false: default to u: URL, h: html. Specify in a list")
+    parser.add_argument('--CRAWL', action="store", nargs='+', dest="CRAWL", help="Specify if the program should Crawl(True) or not. Crawling will be disabled for local HTML files. Specify in a list")
 
     opt = parser.parse_args([
         '--IN', ['test.html', 'https://github.com/xileftenurb/polymtl-inf8007-site-exemple/'],
