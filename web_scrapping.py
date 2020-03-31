@@ -8,7 +8,7 @@ import urllib
 import urllib.request
 from abc import ABC
 from html.parser import HTMLParser
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List
 from urllib.parse import urlparse, urljoin
 import pandas as pd  # type: ignore
 import pylint   # type: ignore
