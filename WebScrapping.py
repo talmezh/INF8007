@@ -8,9 +8,12 @@ import re
 import codecs
 import argparse
 import sys
+from typing import TypeVar
+
+AnyStr = TypeVar('AnyStr', str, bytes)
 
 
-def webScrapping(IN, TYPE, CRAWL, z):# Get base links
+def webScrapping(IN, TYPE, CRAWL, z) -> None:# Get base links
     # Classe parser qui trouver les a href dans le html
     class MyHTMLParser(HTMLParser):
         def handle_starttag(self, tag, attrs):
@@ -18,13 +21,13 @@ def webScrapping(IN, TYPE, CRAWL, z):# Get base links
                 for name, value in attrs:
                     if name == "href":
                         # Une fois trouvé, le lien est nettoyé afin d'éliminer les faux positifs
-                        if value.find(';'):
-                            continue
-                        else:
-                            value = value.replace("\\", '')
-                            value = value.replace("\"", '')
-                            value = value.replace("'", '')
-                            links.append(value)
+                        # if value.find(';') != -1:
+                        #     continue
+                        # else:
+                        value = value.replace("\\", '')
+                        value = value.replace("\"", '')
+                        value = value.replace("'", '')
+                        links.append(value)
     # Trouver le lien de base
     to_visit = [IN]
     outlinks = []
@@ -41,7 +44,7 @@ def webScrapping(IN, TYPE, CRAWL, z):# Get base links
         f.close()
         links = []
         links = re.findall(
-            "https?://?(?:(?:\w+\.)+[\w:]+\@)?(?:(?:\w+\.)+\w+)(?::\w+)?(?:/[\w\.\-]+)*/?(?:\?[\w=&]+)?(?:#\w+)?", html)
+            "https?://?(?:(?:\w+\.)+[\w:]+\@)?(?:(?:[\w\-]+\.*)+\w+)(?::\w+)?(?:/[\w\.\-]+)*/?(?:\?[\w=&]+)?(?:#\w+)?", html)
         parser.feed(html)
 
         for link in links:
@@ -71,7 +74,7 @@ def webScrapping(IN, TYPE, CRAWL, z):# Get base links
                 html = str(f.read())
                 f.close()
                 links = []
-                links = re.findall("https?://?(?:(?:\w+\.)+[\w:]+\@)?(?:(?:\w+\.)+\w+)(?::\w+)?(?:/[\w\.\-]+)*/?(?:\?[\w=&]+)?(?:#\w+)?", html)
+                links = re.findall("https?://?(?:(?:\w+\.)+[\w:]+\@)?(?:(?:[\w\-]+\.*)+\w+)(?::\w+)?(?:/[\w\.\-]+)*/?(?:\?[\w=&]+)?(?:#\w+)?", html)
                 parser.feed(html)
 
                 for link in links:
@@ -105,7 +108,7 @@ def webScrapping(IN, TYPE, CRAWL, z):# Get base links
                         # On essaye d'y accéder dans un délais inférieur de 1 secondes
                         try:
                             print("trying")
-                            r = requests.get(l, timeout=1)
+                            r = requests.get(l, timeout=2)
                             visited[l] = r.status_code
                         # Si on n'y arrive pas, on considère le lien mort
                         except:
@@ -120,10 +123,10 @@ def webScrapping(IN, TYPE, CRAWL, z):# Get base links
         # On regarde un lien à la fois
         l = outlinks.pop()
         print(l)
-        # On essaye d'y accéder dans un délais inférieur de 1 secondes
+        # On essaye d'y accéder dans un délais inférieur de 2 secondes
         try:
             print("trying")
-            r = requests.get(l, timeout=1)
+            r = requests.get(l, timeout=2)
             external_visited[l] = r.status_code
         # Si on n'y arrive pas, on considère le lien mort
         except:
@@ -153,9 +156,9 @@ if __name__ == '__main__':
     parser.add_argument('--CRAWL', action="store", dest="CRAWL", help="Specify if the program should Crawl(True) or not. Crawling will be disabled for local HTML files. Specify in a list")
 
     opt = parser.parse_args([
-        '--IN', ['test.html', 'https://github.com/xileftenurb/polymtl-inf8007-site-exemple/'],
-        '--TYPE', ['h', 'u'],
-        '--CRAWL', ['False', 'False']
+        '--IN', ['tal.html'],
+        '--TYPE', ['h'],
+        '--CRAWL', ['True']
                              ])
     assert len(opt.IN) == len(opt.TYPE) == len(opt.CRAWL), "Input arguments must have the same length"
 
