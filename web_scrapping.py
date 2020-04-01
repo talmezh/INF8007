@@ -10,8 +10,8 @@ from abc import ABC
 from html.parser import HTMLParser
 from typing import Dict, List
 from urllib.parse import urlparse, urljoin
+import pylint  # type: ignore
 import pandas as pd  # type: ignore
-import pylint   # type: ignore
 import requests
 
 
@@ -24,6 +24,7 @@ def regex(html: str) -> List[str]:
 
 def web_scrapping(in_arg: str, type_arg: str, crawl_arg: str, i_arg: int) -> None:  # Get base links
     """Scrape the given input and write to files the status of all found links"""
+
     # Classe parser qui trouver les a href dans le html
     class MyHTMLParser(HTMLParser, ABC):
         """ This class parse a HTML file and returns all a href"""
@@ -49,7 +50,7 @@ def web_scrapping(in_arg: str, type_arg: str, crawl_arg: str, i_arg: int) -> Non
     deadlinks: List[str] = []
     to_crawl = True
 
-    if type_arg == 'h':
+    if type_arg.endswith('h'):
         file = codecs.open(in_arg, "r", "utf-8")
         html = str(file.read())
         file.close()
@@ -106,7 +107,7 @@ def web_scrapping(in_arg: str, type_arg: str, crawl_arg: str, i_arg: int) -> Non
                         if link not in outlinks and link not in visited.keys():
                             outlinks.append(link)
 
-                if crawl_arg == 'False':
+                if crawl_arg.endswith('False'):
                     to_crawl = False
                     while to_visit:
                         # On regarde un lien à la fois
@@ -156,13 +157,23 @@ def web_scrapping(in_arg: str, type_arg: str, crawl_arg: str, i_arg: int) -> Non
     results.to_csv('link_report_' + str(i_arg) + '.csv')
 
 
-if __name__ == '__main__':
-    OPTIONS = '-enable=all'
-    OPTIONS += 'reports=y'
+def update_args(opt):
+    """ Updates the args in opt"""
+    opt_out: List[List[str, str, str]] = []
+    file1 = open(opt.IN[0], 'r')
+    lines = file1.readlines()
+    for line in lines:
+        opt_out.append(line.strip().split(','))
+    return opt_out
 
-    STDOUT, STDERR = pylint.epylint.py_run('web_scrapping.py' + ' ' + OPTIONS, return_std=True)
-    print(STDOUT.getvalue())
-    print(STDERR.getvalue())
+
+if __name__ == '__main__':
+    # OPTIONS = '-enable=all'
+    # OPTIONS += 'reports=y'
+    #
+    # STDOUT, STDERR = pylint.epylint.py_run('web_scrapping.py' + ' ' + OPTIONS, return_std=True)
+    # print(STDOUT.getvalue())
+    # print(STDERR.getvalue())
 
     PARSER = argparse.ArgumentParser(description='WebCrawler')
 
@@ -170,19 +181,41 @@ if __name__ == '__main__':
                         help="Specifiy the url(s) or the path to the HTML file(s)"
                              " given in a list [link1, link2, ...]")
     PARSER.add_argument('--TYPE', action="store", nargs='+',
-                        help="Select input type (false: default to u: URL, h: html."
+                        help="Select input type (u: URL, h: html, f: file)"
                              " Specify in a list")
     PARSER.add_argument('--CRAWL', action="store", nargs='+', dest="CRAWL",
                         help="Specify if the program should Crawl(True) or not. "
-                             "Crawling will be disabled for local HTML files. Specify in a list")
+                             "Crawling arg be ignored for local HTML files."
+                             "Specify in a list fashion. Not needed for files")
 
     OPT = PARSER.parse_args([
-        '--IN', 'http://localhost:3000/', 'tal.html',
-        '--TYPE', 'u', 'h',
-        '--CRAWL', 'True', 'False'
+        '--IN', 'file.txt',
+        '--TYPE', 'f'
+        #  '--CRAWL', 'True', 'False'
     ])
-    assert len(OPT.IN) == len(OPT.TYPE) == len(OPT.CRAWL),\
-        "Input arguments must have the same length"
 
-    for i in range(len(OPT.IN)):
-        web_scrapping(OPT.IN[i], OPT.TYPE[i], OPT.CRAWL[i], i)
+    # OPT = PARSER.parse_args([
+    #     '--IN', 'tal.html', 'http://localhost:3000/',
+    #     '--TYPE', 'h', 'u',
+    #     '--CRAWL', 'False', 'False'
+    # ])
+
+    # URLs et fichiers htlm sont dans un fichier:
+    if OPT.TYPE == ['f']:
+        assert len(OPT.IN) == len(OPT.TYPE), \
+            "Input arguments must have the same length"
+        TO_PARSE = update_args(OPT)
+        for i in range(len(TO_PARSE)):
+            OPT = PARSER.parse_args([
+                '--IN', TO_PARSE[i][0],
+                '--TYPE', TO_PARSE[i][1],
+                '--CRAWL', TO_PARSE[i][2]
+            ])
+            assert len(OPT.IN) == len(OPT.TYPE) == len(OPT.CRAWL), \
+                "Input arguments must have the same length"
+            web_scrapping(OPT.IN[0], OPT.TYPE[0], OPT.CRAWL[0], i)
+    else:
+        assert len(OPT.IN) == len(OPT.TYPE) == len(OPT.CRAWL), \
+            "Input arguments must have the same length"
+        for i in range(len(OPT.IN)):
+            web_scrapping(OPT.IN[i], OPT.TYPE[i], OPT.CRAWL[i], i)

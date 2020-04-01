@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>index</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <p>
+      welcome to page index
+    </p>
+    <p>
+      here a list of internal link :
+      <ul>
+        <li><a href="/page2">page 2</a></li>
+        <li><a href="http://localhost:3000/page3">page 3 (direct)</a></li>
+        <li><a href="page3">page 3 (relatif)</a></li>
+        <li><a href="./page4">page 4</a></li>
+        <li><a>http://localhost:3000/page5</a></li>
+        <li><span>http://localhost:3000/page6</span></li>
+        <li><a href="#just-an-anchor">an anchor</a></li>
+        <li><a href="/page2?with=a&query=string">page 2 with a query string</a></li>
+        <li><a href="/errored-page">error page</a></li>
+        <li><a href="/private-page">private page</a></li>
+        <li><a href="/permanent-redirect-to-root-page">permanent redirect page</a></li>
+        <li><a href="/temporary-redirect-to-error-page">temporary redirect page</a></li>
+        <li><a href="/created">normal page but return 201 (created) instead of 200</a></li>
+        <li><a href="/well-this-link-do-not-exist">and oops. a 404</a></li>
+      </ul>
+      you can also go here <a href="./users">but this is not html</a>
+    </p>
+    <p>
+      And here a list of external link :
+      <ul>
+        <li><a href="https://www.polymtl.ca">polytechnique</a></li>
+        <li><a href="https://moodle.polymtl.ca">moodle de poly</a></li>
+        <li><a href="https://wikipedia.org">wikipedia</a></li>
+        <li><a href="https://www.mozilla.org/fr">mozilla</a></li>
+        <li><a href="https://www.this-is-not-a-real-site-is-it.org">not a real site.</a></li>
+        <li><a href="https://google.com/asdfghijklmnopqrstuvwxyz">not a real page</a></li>
+        <li><a href="https://google.com/teapot">status code 418</a></li>
+        <li><a href="https://www.page1book.com/">special link of page index</a></li>
+      </ul>
+    </p>
+    <script src="/ascript.js"></script>
+  </body>
+</html>
