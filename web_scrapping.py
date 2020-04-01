@@ -168,12 +168,12 @@ def update_args(opt):
 
 
 if __name__ == '__main__':
-    # OPTIONS = '-enable=all'
-    # OPTIONS += 'reports=y'
-    #
-    # STDOUT, STDERR = pylint.epylint.py_run('web_scrapping.py' + ' ' + OPTIONS, return_std=True)
-    # print(STDOUT.getvalue())
-    # print(STDERR.getvalue())
+    OPTIONS = '-enable=all'
+    OPTIONS += 'reports=y'
+
+    STDOUT, STDERR = pylint.epylint.py_run('web_scrapping.py' + ' ' + OPTIONS, return_std=True)
+    print(STDOUT.getvalue())
+    print(STDERR.getvalue())
 
     PARSER = argparse.ArgumentParser(description='WebCrawler')
 
@@ -188,11 +188,12 @@ if __name__ == '__main__':
                              "Crawling arg be ignored for local HTML files."
                              "Specify in a list fashion. Not needed for files")
 
-    OPT = PARSER.parse_args([
-        '--IN', 'file.txt',
-        '--TYPE', 'f'
-        #  '--CRAWL', 'True', 'False'
-    ])
+    OPT = PARSER.parse_args()
+    # OPT = PARSER.parse_args([
+    #     '--IN', 'file.txt',
+    #     '--TYPE', 'f'
+    #     #  '--CRAWL', 'True', 'False'
+    # ])
 
     # OPT = PARSER.parse_args([
     #     '--IN', 'tal.html', 'http://localhost:3000/',

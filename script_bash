@@ -1,6 +1,3 @@
-#Selection de l'environnement conda approprie
-source ~/miniconda3/etc/profile.d/conda.sh
-conda activate INF8007
 #Prends le premier argument comme l'adresse du git a cloner
 REPO=$1
 #Verifie que le lien est bien un repertoire git
