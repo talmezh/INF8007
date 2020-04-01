@@ -1,15 +1,33 @@
+#Selection de l'environnement conda approprie
+source ~/miniconda3/etc/profile.d/conda.sh
+conda activate INF8007
 #Prends le premier argument comme l'adresse du git a cloner
-repo=$1
-#Extraire le nom du dossier du repertoire local
-basename=$(basename $repo)
-filename=${basename%.*}
-#Prends le deuxieme argument et cree la variable d'environnement PORT
-export PORT=$2
-#Clone le repertoire
-git clone $repo
-#Changement de dossier
-cd $filename
-#Installation des dependances
-npm install
-#Depart du serveur local
-npm start
+REPO=$1
+#Verifie que le lien est bien un repertoire git
+GIT_ASKPASS=false
+git ls-remote "$REPO" > /dev/null 2>&1
+if [ "$?" -ne 0 ]; then
+    echo "[ERROR] Unable to read from '$REPO'"
+    exit 1;
+else
+  #Extraire le nom du dossier du repertoire local
+  basename=$(basename $REPO)
+  filename=${basename%.*}
+  #Prends le deuxieme argument et cree la variable d'environnement PORT
+  export PORT=$2
+  #Clone le repertoire
+  git clone $REPO
+  #Changement de dossier
+  cd $filename
+  #Installation des dependances
+  npm install
+  #Depart du serveur local
+  npm start &
+  #Delai pour partir le serveur
+  sleep 5s
+  #Execution du programme webScarping
+  python ../web_scrapping.py --IN http://localhost:$PORT --TYPE u --CRAWL False
+fi
+
+
+
