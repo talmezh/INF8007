@@ -16,10 +16,25 @@ import requests
 
 
 def regex(html: str) -> List[str]:
-    """ Uses the following Regex to extract links on the given parsed HTML"""
+    """ Fonction pure: Uses the Regex to extract links on the given parsed HTML """
     reg = r"https?://?(?:(?:\w+\.)+[\w:]+\@)?(?:(?:[\w\-]+\.*)+\w+)" \
           r"(?::\w+)?(?:/[\w\.\-]+)*/?(?:\?[\w=&]+)?(?:#\w+)?"
     return re.findall(reg, html)
+
+
+def update_args(opt):
+    """ Fonction pure: Updates the args of opt """
+    opt_out: List[List[str, str, str]] = []
+    file1 = open(opt.IN[0], 'r')
+    lines = file1.readlines()
+    for line in lines:
+        opt_out.append(line.strip().split(','))
+    return opt_out
+
+
+def is_href(name: str) -> bool:
+    """ Fonction pure: verify is start tag contains href """
+    return name == "href"
 
 
 def web_scrapping(in_arg: str, type_arg: str, crawl_arg: str, i_arg: int) -> None:  # Get base links
@@ -31,7 +46,7 @@ def web_scrapping(in_arg: str, type_arg: str, crawl_arg: str, i_arg: int) -> Non
         def handle_starttag(self, tag: str, attrs) -> None:
             if tag == "a":
                 for name, value in attrs:
-                    if name == "href":
+                    if is_href(name):
                         # Une fois trouvé, le lien est nettoyé afin d'éliminer les faux positifs
                         # if value.find(';') != -1:
                         #     continue
@@ -157,24 +172,20 @@ def web_scrapping(in_arg: str, type_arg: str, crawl_arg: str, i_arg: int) -> Non
     results.to_csv('link_report_' + str(i_arg) + '.csv')
 
 
-def update_args(opt):
-    """ Updates the args in opt"""
-    opt_out: List[List[str, str, str]] = []
-    file1 = open(opt.IN[0], 'r')
-    lines = file1.readlines()
-    for line in lines:
-        opt_out.append(line.strip().split(','))
-    return opt_out
-
-
 if __name__ == '__main__':
+    # Linter
     OPTIONS = '-enable=all'
     OPTIONS += 'reports=y'
-
     STDOUT, STDERR = pylint.epylint.py_run('web_scrapping.py' + ' ' + OPTIONS, return_std=True)
     print(STDOUT.getvalue())
     print(STDERR.getvalue())
 
+    # Logging
+    import sys
+    import logging
+    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
+    # Parser
     PARSER = argparse.ArgumentParser(description='WebCrawler')
 
     PARSER.add_argument('--IN', action="store", nargs='+',
@@ -188,18 +199,18 @@ if __name__ == '__main__':
                              "Crawling arg be ignored for local HTML files."
                              "Specify in a list fashion. Not needed for files")
 
-    OPT = PARSER.parse_args()
+    # OPT = PARSER.parse_args()
     # OPT = PARSER.parse_args([
     #     '--IN', 'file.txt',
     #     '--TYPE', 'f'
     #     #  '--CRAWL', 'True', 'False'
     # ])
 
-    # OPT = PARSER.parse_args([
-    #     '--IN', 'tal.html', 'http://localhost:3000/',
-    #     '--TYPE', 'h', 'u',
-    #     '--CRAWL', 'False', 'False'
-    # ])
+    OPT = PARSER.parse_args([
+        '--IN', 'tal.html', 'http://localhost:3000/',
+        '--TYPE', 'h', 'u',
+        '--CRAWL', 'False', 'False'
+    ])
 
     # URLs et fichiers htlm sont dans un fichier:
     if OPT.TYPE == ['f']:
