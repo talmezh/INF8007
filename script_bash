@@ -21,9 +21,11 @@ else
   #Depart du serveur local
   npm start &
   #Delai pour partir le serveur
-  sleep 5s
+  sleep 3s
+  #Retour au dossier precedent pour la sauvegarde des rapport de lien
+  cd ..
   #Execution du programme webScarping
-  python ../web_scrapping.py --IN http://localhost:$PORT --TYPE u --CRAWL False
+  python web_scrapping.py --IN http://localhost:$PORT --TYPE u --CRAWL False
 fi
 
 
