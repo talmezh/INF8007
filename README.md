@@ -7,15 +7,45 @@ Une fois que le repo est clôné, l'exécution de la commande suivante permet de
 ```
 conda env create -f INF8007_env.yml
 ```
-Ensuite, pour exécuter le code il suffit d'activer l'environnement anaconda crée:
+Ensuite, avant d'exécuter le code il faut activer l'environnement anaconda crée:
 ```
 conda activate INF8007
 ```
-Puis lancer le script en donnant le site web à analyser comme argument:
+Puis lancer le script en donnant les arguments désirés:
 ```
-python WebScrapping.py https://www.nom-du-site.com
+python web_scrapping.py --IN arg1 arg2 ... --TYPE arg3 arg4 ... --CRAWL arg5 arg6 ...
 ```
 À la sortie, le fichier `link_repost.csv` contient les résultats de l'analyse avec tous les sites vérifiés ainsi que leur code de status
+
+## Précisions sur les arguments acceptés
+Le script s'attends à recevoir des arguments selon la structure suivante: 
+```
+--IN arg1 arg2 ... --TYPE arg3 arg4 ... --CRAWL arg5 arg6 ...
+```
+`--IN` représente les éléments à analyser. Ils sont présenté sous forme de `string` et peuvent représenter soit un site URL, un fichier .html ou bien un fichier text. 
+
+`--TYPE` représente les types d'éléments  analyser. Les types accéptés sont `h` pour un fichier .html, `u` pour un URL ou `f` pour un fichier texte
+
+`--CRAWL` représente l'activation du crawling. Le script accepte soit `False` pour désactiver le crawling ou `True` pour l'activer
+
+Les arguments doivent être séparés d'espaces. Le script peut accepter multiple entrées pour chaque argument pourvu que le nombre est le même pour chacun. Par exemple:
+```
+python web_scrapping.py --IN test.html http://localhost:3000/ --TYPE h u --CRAWL False True
+```
+Ici le script analysera un fichier .html et un site en désactivant le crawling pour le fichier .html
+Il est également possible de donner un fichier texte au script (en spécifiant la l'option `f` pour l'argument `--TYPE`). Le fichier texte doit contenir tous les triplets d'arguments `--IN`, `--TYPE`, `--CRAWL` séparés par des virgules avec les options décrites précédemment.
+
+## Utilisation du script bash
+Le script bash inclus dans ce repo sous le nom `script_bash` permet à l'utilisateur d'exécuter le scirpt `web_scraping.py` sur un serveur node contenu dans un repo github.
+
+Afin de lancer le script l'utilisateur doit tout d'abord d'activer l'environnement conda approprié:
+```
+conda activate INF8007
+```
+Ensuite, il faut appeller le script bash en lui fournissant 2 arguments. L'argument 1 contient le lien vers le repo github qui contient le serveur Node à initialiser. L'argument 2 est le numéro de port où le serveur sera lancé (localhost:PORT).
+```
+bash script_bash https://github.com/user/repo.git PORT
+```
 
 ## Utilisation et vérification du typage
 Afin de vérifier que le typage ne comporte pas d'erreur dans le code, nous avons utilisé MyPy qui détecte les erreurs de typage. Si l'utilisateur souhaite vérifier que le typage est adéquat, il peut le faire comme suit en activant d'abord l'environnement Conda:
