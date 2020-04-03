@@ -73,8 +73,12 @@ def web_scrapping(in_arg: str, type_arg: str, crawl_arg: str, i_arg: int) -> Non
 
     if type_arg.endswith('h'):
         file = codecs.open(in_arg, "r", "utf-8")
-        html = str(file.read())
-        file.close()
+        try:
+            html = str(file.read())
+            file.close()
+        except:
+            eprint("Cannot open input file %s" % in_arg)
+
         links = regex(html)
         for link in links:
             if link not in outlinks and link not in visited.keys():
@@ -94,14 +98,18 @@ def web_scrapping(in_arg: str, type_arg: str, crawl_arg: str, i_arg: int) -> Non
                 req = requests.get(url, timeout=2)
                 visited[link] = req.status_code
             except:
+                eprint("No response from %s. Cannot obtain status code" % url)
                 visited[link] = 0
             # Si le lien existe:
             if req.status_code == 200:
                 # On parse le html et on applique notre regex pour trouvez tous les liens
                 parser_local = MyHTMLParser()
-                file = urllib.request.urlopen(link)
-                html = str(file.read())
-                file.close()
+                try:
+                    file = urllib.request.urlopen(link)
+                    html = str(file.read())
+                    file.close()
+                except:
+                    eprint("Unable to read html code from %s" % link)
                 links = []
                 links = regex(html)
                 parser_local.feed(html)
@@ -136,12 +144,11 @@ def web_scrapping(in_arg: str, type_arg: str, crawl_arg: str, i_arg: int) -> Non
                         print(link)
                         # On essaye d'y accéder dans un délais inférieur de 1 secondes
                         try:
-                            print("trying")
                             req = requests.get(link, timeout=2)
                             visited[link] = req.status_code
                         # Si on n'y arrive pas, on considère le lien mort
                         except:
-                            print("except")
+                            eprint("No response from %s. Cannot obtain status code" % link)
                             deadlinks.append(link)
                             visited[link] = 0
 
@@ -154,12 +161,11 @@ def web_scrapping(in_arg: str, type_arg: str, crawl_arg: str, i_arg: int) -> Non
         print(link)
         # On essaye d'y accéder dans un délais inférieur de 2 secondes
         try:
-            print("trying")
             req = requests.get(link, timeout=2)
             external_visited[link] = req.status_code
         # Si on n'y arrive pas, on considère le lien mort
         except:
-            print("except")
+            eprint("No response fromexternal link %s. Cannot obtain status code" % link)
             deadlinks.append(link)
             external_visited[link] = 0
 
