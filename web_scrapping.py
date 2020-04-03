@@ -1,6 +1,6 @@
 #!/usr/bin/env Python
 """ This script is used to crawl website(s) and html(s)"""
-
+import sys
 import argparse
 import codecs
 import re
@@ -13,6 +13,12 @@ from urllib.parse import urlparse, urljoin
 import pylint  # type: ignore
 import pandas as pd  # type: ignore
 import requests
+
+def eprint(message: str):
+    '''
+    Fonction pure: Writes message to std:err
+    '''
+    print(message, file=sys.stderr)
 
 
 def regex(html: str) -> List[str]:
